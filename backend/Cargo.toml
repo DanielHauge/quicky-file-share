@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 shared = { version = "0.1.0", path = "../shared" }
+tokio = { version = "1", features = ["full"] }
+warp = "0.3"
