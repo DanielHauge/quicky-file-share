@@ -37,12 +37,18 @@ fn switch(route: Route) -> Html {
 #[function_component(App)]
 pub fn app() -> Html {
     html! {
-        <BrowserRouter>
-            <Switch<Route> render={switch} />
-        </BrowserRouter>
+        <div>
+            <h1 class="title">{ "Quicky file share!" }</h1>
+            <hr class="style-seven"/>
+            <BrowserRouter>
+                
+                <Switch<Route> render={switch} />
+            </BrowserRouter>
+        </div>
     }
 }
 
 fn main() {
+    wasm_logger::init(wasm_logger::Config::default());
     yew::Renderer::<App>::new().render();
 }

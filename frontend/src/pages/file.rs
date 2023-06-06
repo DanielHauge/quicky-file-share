@@ -14,6 +14,7 @@ pub fn file(props: &FileProps) -> Html {
         <>
             // <img class="logo" src="https://yew.rs/img/logo.png" alt="Yew logo" />
             <h1>{ "File:" } { props.file_id.clone() }</h1>
+
         </>
     }
 }
