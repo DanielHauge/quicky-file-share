@@ -1,14 +1,22 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, PartialEq, Deserialize, Serialize)]
+pub enum FileType{
+    ASCII,
+    PNG,
+    JPG,
+    MP4,
+    MP3,
+    Unknown
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[derive(Clone, PartialEq, Deserialize, Serialize)]
+pub struct FileMeta {
+    pub file_name: String,
+    pub file_size: i32,
+    pub file_uploaded: i32,
+    pub file_link: String,
+    pub file_type: FileType
 }
+
+

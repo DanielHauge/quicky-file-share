@@ -1,14 +1,12 @@
 use warp::{multipart::FormData, reply::Response, Reply, Rejection};
 
-
-
 pub struct File {
-    file_name: FormData
+    data: FormData
 }
 
 impl warp::Reply for File {
     fn into_response(self) -> warp::reply::Response {
-        Response::new(format!("Thanks!, {:?}", self.file_name).into())
+        Response::new(format!("Thanks!, {:?}", self.data).into())
     }
 }
 
@@ -16,7 +14,7 @@ impl warp::Reply for File {
 /// TODO: This function is a placeholder
 pub async fn upload_file(form: FormData) -> Result<impl Reply, Rejection> {
     let file = File{
-        file_name: form
+        data: form
     };
     Ok(file)
 }

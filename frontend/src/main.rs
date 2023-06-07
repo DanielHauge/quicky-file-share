@@ -1,19 +1,19 @@
 #[path = "pages/home.rs"] mod home;
-#[path = "pages/file.rs"] mod file;
+#[path = "pages/download.rs"] mod download;
 #[path = "pages/not_found.rs"] mod not_found;
 
 use yew_router::prelude::*;
 use home::Home;
 use not_found::NotFound;
-use file::{File, FileProps};
+use download::{Download, DownloadProps};
 use yew::{function_component, html, Html, props};
 
 #[derive(Clone, Routable, PartialEq)]
 enum Route {
     #[at("/")]
     Home,
-    #[at("/file/:id")]
-    File { id: String },
+    #[at("/:id")]
+    Download { id: String },
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -22,11 +22,11 @@ enum Route {
 
 fn switch(route: Route) -> Html {
     match route {
-        Route::File { id } => {
+        Route::Download { id } => {
                 let props = props!{
-                    FileProps { file_id: id }
+                    DownloadProps { file_id: id }
                 };
-                html! { <File ..props /> }
+                html! { <Download ..props /> }
             }, 
         Route::Home => html!{ <Home /> },
         Route::NotFound => html!{ <NotFound /> }
@@ -41,7 +41,6 @@ pub fn app() -> Html {
             <h1 class="title">{ "Quicky file share!" }</h1>
             <hr class="style-seven"/>
             <BrowserRouter>
-                
                 <Switch<Route> render={switch} />
             </BrowserRouter>
         </div>
