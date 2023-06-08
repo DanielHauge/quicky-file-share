@@ -2,19 +2,11 @@ use futures::{TryStreamExt, StreamExt};
 use bytes::{Buf};
 use tokio::task;
 use std::{fs};
+use std::io::Error;
 use warp::{
-    multipart::{FormData},
-    Rejection, Reply, reply::Response
+    multipart::{FormData, Part},
+    Rejection, Reply
 };
-pub struct File {
-    data: FormData
-}
-
-impl warp::Reply for File {
-    fn into_response(self) -> warp::reply::Response {
-        Response::new(format!("Thanks!, {:?}", self.data).into())
-    }
-}
 
 pub async fn upload_file(form: FormData) -> Result<impl Reply, Rejection> {
     task::spawn(async move {
@@ -29,7 +21,7 @@ pub async fn upload_file(form: FormData) -> Result<impl Reply, Rejection> {
     Ok("Upload successful!")
 }
 
-async fn save_part_to_file(path: &str, part: warp::multipart::Part) -> Result<(), std::io::Error> {
+async fn save_part_to_file(path: &str, part: Part) -> Result<(), Error> {
     let data = part.stream()
         .try_fold(Vec::new(), |mut acc, buf| async move {
             acc.extend_from_slice(buf.chunk());
