@@ -1,17 +1,40 @@
-use warp::{Reply, Rejection, hyper::Response};
+use warp::{Reply, Rejection, hyper::Response, reject::{self, Reject} };
 use shared::{FileMeta,FileType};
 use serde_json;
 
-pub async fn meta_for_file(_id: String) -> Result<impl Reply, Rejection> {
-    // TODO -> Lookup actual file meta.
+fn fetch_meta_for_file(id: String) -> Option<FileMeta> {
+    // TODO -> Lookup actual file meta
     let result = FileMeta {
         file_link: String::from("123"),
-        file_name: String::from("test_name"),
+        file_name: id,
         file_size: 123456,
         file_type: FileType::ASCII,
         file_uploaded: 123455
     };
-    let gg = serde_json::to_string(&result).unwrap();
-    let resp = Response::new(gg);
-    Ok(resp)
+    Some(result)
+}
+
+#[derive(Debug)]
+struct ParsingError;
+impl Reject for ParsingError {}
+
+fn json_response(fm: FileMeta) -> Result<impl Reply, Rejection>{
+    match serde_json::to_string(&fm) {
+        Ok(json_string) => Ok(Response::new(json_string)),
+        Err(_) => Err(reject::custom(ParsingError)),
+    }
+}
+
+pub async fn meta_for_file(id: Option<String>) -> Result<impl Reply, Rejection> {
+    match id {
+        None => Err(warp::reject()),
+        Some(f_id) => {
+            match fetch_meta_for_file(f_id) {
+                Some(fm) => json_response(fm),
+                None => Err(warp::reject())
+            }
+            
+        }
+    }
+    
 }
