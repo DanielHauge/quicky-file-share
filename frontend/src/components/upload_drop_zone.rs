@@ -1,9 +1,7 @@
-#[path = "../components/upload_field.rs"] mod upload_field;
 
-use log::info;
-use yew::{prelude::*, classes};
+
+use yew::{prelude::*};
 use web_sys::{DragEvent, FileList, File};
-use upload_field::UploadField;
 
 pub struct FileListIterator {
     files: FileList,
@@ -33,25 +31,30 @@ impl Iterator for FileListIterator {
     }
 }
 
+#[derive(Properties, Clone, PartialEq)]
+pub struct UploadZoneProps {
+    
+    pub file_dropped_cb: Callback<FileListIterator>,
+    pub children: Children
+}
 
 #[function_component(UploadZone)]
-pub fn upload_field() -> Html {
+pub fn upload_field(props: &UploadZoneProps) -> Html {
 
     let ondragover={ move |e:html::ondragover::Event| e.prevent_default() };
-
+    
     let ondrop = {
-        move |e:DragEvent| {
+        let cb = props.file_dropped_cb.clone();
+        move |e:DragEvent| {    
             e.prevent_default();
             let iterator = FileListIterator::from(e);
-            for file in iterator {
-                info!("ondrop {:?}", file.name());
-            }
+            cb.emit(iterator)
         }
     };
 
     html! {
         <div ondrop={ondrop} ondragover={ondragover} >
-            <UploadField />
+            { props.children.clone() }
         </div>
     }
 }

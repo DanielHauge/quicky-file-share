@@ -26,6 +26,8 @@ main {
   height: 20em;
 }
 
+
+
 .heart:after {
   content: "❤️";
 
@@ -53,12 +55,11 @@ h1 + .subtitle {
   border: 2px dashed #555;
   background-color: whitesmoke;
   color: #444;
-  cursor: pointer;
   transition: background .2s ease-in-out, border .2s ease-in-out;
 }
 
 .drop-container:hover {
-  background: gainsboro;
+  background: whitesmoke;
   border-color: #111;
 }
 
@@ -92,19 +93,14 @@ h1 + .subtitle {
 }
 
 
-
 input[type=file] {
-  width: 350px;
+  width: 7em;
   max-width: 100%;
   color: #444;
-  padding: 5px;
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid #555;
+  padding: 0px;
 }
 
 input[type=file]::file-selector-button {
-  margin-right: 20px;
   border: none;
   background: #084cdf;
   padding: 10px 20px;

@@ -1,8 +1,17 @@
-use yew::{prelude::*, classes};
+#[path = "../components/upload_file_li.rs"] mod upload_file_li;
 
+use yew::{prelude::*, classes};
+use upload_file_li::UploadFileLi;
+
+#[derive(Properties, Clone, PartialEq)]
+pub struct UploadFieldProps {
+    pub selected_files: Vec<String>,
+    pub zip_toggle_cb: Callback<bool>,
+    pub remove_file_cb: Callback<String>
+}
 
 #[function_component(UploadField)]
-pub fn upload_field() -> Html {
+pub fn upload_field(props: &UploadFieldProps) -> Html {
 
     let drag_class = use_state(|| "");
     let classes = ["drop-container", *drag_class];
@@ -21,12 +30,30 @@ pub fn upload_field() -> Html {
         let drag_class_c = drag_class.clone();
         move |_| drag_class_c.set("")
     };
+    
+    let cbs = props.selected_files.iter().map(|_| props.remove_file_cb.clone());
+    let combined = props.selected_files.iter().map(|f| f.clone()).zip(cbs);
+
+    let lis = combined.map(|(f,cb)| html!{ <UploadFileLi selected_file={f} remove_file_cb={cb} /> }).collect::<Html>();
 
     html! {
-        <label {ondragenter} {ondragleave} {ondrop} for="images" class={classes!(classes.as_ref())}>
+        <div {ondragenter} {ondragleave} {ondrop} class={classes!(classes.as_ref())}>
             <span class="drop-title">{"Drop files here"}</span>
                 {"or"}
-            <input type="file" multiple=true id="images" required=true />
-        </label>
+            <input type="file" multiple=true id="images" value="" title=" " required=true />
+            <div>
+            { if props.selected_files.is_empty() {
+                html! {
+                    {"No files selected" }
+                }
+            } else {
+                html! {
+                    <ul>    
+                        {lis}
+                    </ul>
+                }
+            } }
+            </div>
+        </div>
     }
 }
