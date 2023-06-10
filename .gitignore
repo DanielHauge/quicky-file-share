@@ -20,5 +20,5 @@ Cargo.lock
 
 /frontend/dist
 /dev-docs
-/.vscode
+
 /backend/files

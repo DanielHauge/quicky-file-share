@@ -1,8 +1,8 @@
 use yew::prelude::*;
 #[path = "../components/button.rs"] mod button;
-#[path = "../components/upload_field.rs"] mod upload_field;
+#[path = "../components/upload_drop_zone.rs"] mod upload_drop_zone;
 
-use upload_field::UploadField;
+use upload_drop_zone::UploadZone;
 use yew_router::prelude::use_navigator;
 
 use crate::Route;
@@ -14,7 +14,7 @@ pub fn home() -> Html {
     html! {
         <div>
             <button {onclick}>{ "Test" }</button>
-            <UploadField />
+            <UploadZone />
         </div>
     }
 }

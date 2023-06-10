@@ -11,3 +11,4 @@ log = "0.4.6"
 wasm-logger = "0.2.0"
 gloo-net = "0.2"
 serde_json = "1.0"
+web-sys = { version="0.3.63", features=["DragEvent", "DataTransfer", 'FileList'] }
