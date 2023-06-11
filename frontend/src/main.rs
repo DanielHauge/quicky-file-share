@@ -1,12 +1,15 @@
-#[path = "pages/home.rs"] mod home;
-#[path = "pages/download.rs"] mod download;
-#[path = "pages/not_found.rs"] mod not_found;
+#[path = "pages/download.rs"]
+mod download;
+#[path = "pages/home.rs"]
+mod home;
+#[path = "pages/not_found.rs"]
+mod not_found;
 
-use yew_router::prelude::*;
+use download::{Download, DownloadProps};
 use home::Home;
 use not_found::NotFound;
-use download::{Download, DownloadProps};
-use yew::{function_component, html, Html, props};
+use yew::{function_component, html, props, Html};
+use yew_router::prelude::*;
 
 #[derive(Clone, Routable, PartialEq)]
 enum Route {
@@ -19,20 +22,18 @@ enum Route {
     NotFound,
 }
 
-
 fn switch(route: Route) -> Html {
     match route {
         Route::Download { id } => {
-                let props = props!{
-                    DownloadProps { file_id: id }
-                };
-                html! { <Download ..props /> }
-            }, 
-        Route::Home => html!{ <Home /> },
-        Route::NotFound => html!{ <NotFound /> }
+            let props = props! {
+                DownloadProps { file_id: id }
+            };
+            html! { <Download ..props /> }
+        }
+        Route::Home => html! { <Home /> },
+        Route::NotFound => html! { <NotFound /> },
     }
 }
-
 
 #[function_component(App)]
 pub fn app() -> Html {

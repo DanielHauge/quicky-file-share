@@ -1,11 +1,11 @@
-use futures::{TryStreamExt, StreamExt};
-use bytes::{Buf};
-use tokio::task;
-use std::{fs};
+use bytes::Buf;
+use futures::{StreamExt, TryStreamExt};
+use std::fs;
 use std::io::Error;
+use tokio::task;
 use warp::{
     multipart::{FormData, Part},
-    Rejection, Reply
+    Rejection, Reply,
 };
 
 pub async fn upload_file(form: FormData) -> Result<impl Reply, Rejection> {
@@ -22,11 +22,13 @@ pub async fn upload_file(form: FormData) -> Result<impl Reply, Rejection> {
 }
 
 async fn save_part_to_file(path: &str, part: Part) -> Result<(), Error> {
-    let data = part.stream()
+    let data = part
+        .stream()
         .try_fold(Vec::new(), |mut acc, buf| async move {
             acc.extend_from_slice(buf.chunk());
             Ok(acc)
         })
-        .await.expect("folding error");
+        .await
+        .expect("folding error");
     std::fs::write(path, data)
 }

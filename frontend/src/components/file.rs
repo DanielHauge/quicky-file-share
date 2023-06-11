@@ -11,7 +11,6 @@ pub struct FileProps {
 
 #[function_component(File)]
 pub fn file(props: &FileProps) -> Html {
-
     html! {
         <div>
             <h2> {"File name: "} { &props.file_name } </h2>

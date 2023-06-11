@@ -1,18 +1,16 @@
-mod upload;
 mod meta;
+mod upload;
 
 use std::collections::HashMap;
-use warp::{Filter};
-
+use warp::Filter;
 
 #[tokio::main]
 async fn main() {
     println!("Starting server");
 
     let serve_frontend = warp::fs::dir("../frontend/dist");
-    
-    let download_file = warp::path("files")
-        .and(warp::fs::dir("files"));
+
+    let download_file = warp::path("files").and(warp::fs::dir("files"));
 
     let upload_file = warp::path!("files")
         .and(warp::post())
@@ -21,11 +19,9 @@ async fn main() {
 
     let meta_file = warp::path!("api" / "meta")
         .and(warp::query::<HashMap<String, String>>())
-        .map(|hm: HashMap<String, String>| {
-            match hm.get("id") {
-                None => None,
-                Some(s) => Some(s.to_owned())
-            }
+        .map(|hm: HashMap<String, String>| match hm.get("id") {
+            None => None,
+            Some(s) => Some(s.to_owned()),
         })
         .and_then(meta::meta_for_file);
 
@@ -34,12 +30,11 @@ async fn main() {
         e
     });
 
-    let serve=meta_file
+    let serve = meta_file
         .or(download_file)
         .or(upload_file)
         .or(serve_frontend)
         .or(not_found);
 
-    warp::serve(serve).run(([127,0,0,1], 8080)).await;
+    warp::serve(serve).run(([127, 0, 0, 1], 8080)).await;
 }
-

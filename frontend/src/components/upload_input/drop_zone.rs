@@ -1,7 +1,5 @@
-
-
-use yew::{prelude::*};
-use web_sys::{DragEvent, FileList, File};
+use web_sys::{DragEvent, File, FileList};
+use yew::prelude::*;
 
 pub struct FileListIterator {
     files: FileList,
@@ -9,18 +7,19 @@ pub struct FileListIterator {
 }
 
 impl FileListIterator {
-    fn from(drag_event: DragEvent) -> FileListIterator{
+    fn from(drag_event: DragEvent) -> FileListIterator {
         let list = drag_event.data_transfer().unwrap().files().unwrap();
-        FileListIterator{files: list, index: 0}
+        FileListIterator {
+            files: list,
+            index: 0,
+        }
     }
 }
-
 
 impl Iterator for FileListIterator {
     type Item = File;
 
     fn next(&mut self) -> Option<Self::Item> {
-        
         match self.files.get(self.index) {
             None => None,
             Some(item) => {
@@ -32,20 +31,18 @@ impl Iterator for FileListIterator {
 }
 
 #[derive(Properties, Clone, PartialEq)]
-pub struct UploadZoneProps {
-    
+pub struct DropZoneProps {
     pub file_dropped_cb: Callback<FileListIterator>,
-    pub children: Children
+    pub children: Children,
 }
 
-#[function_component(UploadZone)]
-pub fn upload_field(props: &UploadZoneProps) -> Html {
+#[function_component(DropZone)]
+pub fn upload_field(props: &DropZoneProps) -> Html {
+    let ondragover = { move |e: html::ondragover::Event| e.prevent_default() };
 
-    let ondragover={ move |e:html::ondragover::Event| e.prevent_default() };
-    
     let ondrop = {
         let cb = props.file_dropped_cb.clone();
-        move |e:DragEvent| {    
+        move |e: DragEvent| {
             e.prevent_default();
             let iterator = FileListIterator::from(e);
             cb.emit(iterator)

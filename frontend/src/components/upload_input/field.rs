@@ -1,18 +1,18 @@
-#[path = "../components/upload_file_li.rs"] mod upload_file_li;
+#[path = "./file_li.rs"]
+mod file_li;
 
-use yew::{prelude::*, classes};
-use upload_file_li::UploadFileLi;
+use file_li::FileLi;
+use yew::{classes, prelude::*};
 
 #[derive(Properties, Clone, PartialEq)]
-pub struct UploadFieldProps {
+pub struct FieldProps {
     pub selected_files: Vec<String>,
     pub zip_toggle_cb: Callback<bool>,
-    pub remove_file_cb: Callback<String>
+    pub remove_file_cb: Callback<String>,
 }
 
-#[function_component(UploadField)]
-pub fn upload_field(props: &UploadFieldProps) -> Html {
-
+#[function_component(Field)]
+pub fn upload_field(props: &FieldProps) -> Html {
     let drag_class = use_state(|| "");
     let classes = ["drop-container", *drag_class];
 
@@ -30,11 +30,16 @@ pub fn upload_field(props: &UploadFieldProps) -> Html {
         let drag_class_c = drag_class.clone();
         move |_| drag_class_c.set("")
     };
-    
-    let cbs = props.selected_files.iter().map(|_| props.remove_file_cb.clone());
+
+    let cbs = props
+        .selected_files
+        .iter()
+        .map(|_| props.remove_file_cb.clone());
     let combined = props.selected_files.iter().map(|f| f.clone()).zip(cbs);
 
-    let lis = combined.map(|(f,cb)| html!{ <UploadFileLi selected_file={f} remove_file_cb={cb} /> }).collect::<Html>();
+    let lis = combined
+        .map(|(f, cb)| html! { <FileLi selected_file={f} remove_file_cb={cb} /> })
+        .collect::<Html>();
 
     html! {
         <div {ondragenter} {ondragleave} {ondrop} class={classes!(classes.as_ref())}>
@@ -48,7 +53,7 @@ pub fn upload_field(props: &UploadFieldProps) -> Html {
                 }
             } else {
                 html! {
-                    <ul>    
+                    <ul>
                         {lis}
                     </ul>
                 }
