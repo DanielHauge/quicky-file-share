@@ -1,2 +1,3 @@
 # quicky-file-share
-Yo that is super great yo.
+
+This project aims to provide a quick way to share files that exceed limits of typical communication platforms: Discord, Slack, Etc...
