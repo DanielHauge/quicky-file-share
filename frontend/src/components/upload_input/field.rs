@@ -1,6 +1,8 @@
 #[path = "./file_li.rs"]
 mod file_li;
 
+use std::rc::Rc;
+
 use file_li::FileLi;
 use yew::{classes, prelude::*};
 
@@ -34,7 +36,7 @@ pub fn upload_field(props: &FieldProps) -> Html {
     let cbs = props
         .selected_files
         .iter()
-        .map(|_| props.remove_file_cb.clone());
+        .map(|_| Box::new(props.remove_file_cb.clone()));
     let combined = props.selected_files.iter().map(|f| f.clone()).zip(cbs);
 
     let lis = combined

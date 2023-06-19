@@ -1,9 +1,10 @@
+
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct FileLiProps {
     pub selected_file: String,
-    pub remove_file_cb: Callback<String>,
+    pub remove_file_cb: Box<Callback<String>>,
 }
 
 #[function_component(FileLi)]

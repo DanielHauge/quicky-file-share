@@ -1,14 +1,18 @@
 
+use log::log;
+use web_sys::{File, FileReader, Event, console};
+use yew::{html, Callback, Component, Html, Properties, suspense::use_future};
 
-use web_sys::File;
-use yew::{html, Callback, Component, Html, Properties};
-
+#[path = "./upload.rs"]
+mod upload;
 
 pub struct Task{
-    file: File
+    file: File,
+    // Progress: i32
 }
 
 pub enum Msg {
+    // Progress(i32),
     Done,
 }
 
@@ -24,13 +28,27 @@ impl Component for Task {
     type Properties = TaskProps;
 
     fn create(_ctx: &yew::Context<Self>) -> Self {
+        
+        let file = _ctx.props().file.clone();
+
+        // upload::upload_file(file);
+        
+
         Task {
-            file: _ctx.props().file.clone()
+            file: _ctx.props().file.clone(),
+            // Progress: 0
         }
     }
 
     fn view(&self, ctx: &yew::Context<Self>) -> Html {
         let onclick = ctx.link().callback(|_| Msg::Done); 
+
+        // JavaScript Stream -> Rust Stream , done pretty unsafe and badly right here, look away please xD
+        
+        // upload::gg(self.file.clone());
+        
+        // let result = fil.unwrap();
+
 
         html! {
             <div {onclick}>
@@ -44,7 +62,11 @@ impl Component for Task {
             Msg::Done => {
                 ctx.props().done_cb.emit(self.file.clone());
                 true
-            }
+            },
+            // Msg::Progress(p) => {
+            //     self.Progress = p;
+            //     true
+            // }
         }
     }
 }

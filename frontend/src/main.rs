@@ -5,10 +5,10 @@ mod home;
 #[path = "pages/not_found.rs"]
 mod not_found;
 
-use download::{Download, DownloadProps};
+use download::{Download};
 use home::Home;
 use not_found::NotFound;
-use yew::{function_component, html, props, Html};
+use yew::{function_component, html, Html};
 use yew_router::prelude::*;
 
 #[derive(Clone, Routable, PartialEq)]
@@ -25,10 +25,7 @@ enum Route {
 fn switch(route: Route) -> Html {
     match route {
         Route::Download { id } => {
-            let props = props! {
-                DownloadProps { file_id: id }
-            };
-            html! { <Download ..props /> }
+            html! { <Download file_id={id} /> }
         }
         Route::Home => html! { <Home /> },
         Route::NotFound => html! { <NotFound /> },
@@ -49,6 +46,5 @@ pub fn app() -> Html {
 }
 
 fn main() {
-    wasm_logger::init(wasm_logger::Config::default());
     yew::Renderer::<App>::new().render();
 }

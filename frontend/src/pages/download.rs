@@ -3,9 +3,10 @@ mod file;
 #[path = "../components/file_not_found.rs"]
 mod file_not_found;
 
+use std::rc::Rc;
+
 use file::{File, FileProps};
 use file_not_found::FileNotFound;
-use gloo_net::http::Request;
 use shared::FileMeta;
 use yew::prelude::*;
 use yew::props;
@@ -19,16 +20,12 @@ pub struct DownloadProps {
 
 #[function_component(Overview)]
 fn overview(p: &DownloadProps) -> HtmlResult {
-    let query = [("id", p.file_id.clone())];
+    let fid = Rc::new(p.file_id.clone());
     let fetch = use_future(|| async {
-        let result: Result<FileMeta, gloo_net::Error> = Request::new("api/meta")
-            .query(query)
-            .send()
-            .await?
-            .json()
-            .await;
-        result
-    })?;
+        let gg = fid;
+        reqwest::get(format!("api/meta?id={}", gg)).await?.json::<FileMeta>().await
+        }
+    )?;
 
     let file_info = match *fetch {
         Ok(ref res) => {

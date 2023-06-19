@@ -3,12 +3,18 @@ name = "frontend"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
 shared = { version = "0.1.0", path = "../shared" }
 yew = { version="0.20", features=["csr"] }
 yew-router = "0.17"
 log = "0.4.6"
-wasm-logger = "0.2.0"
-gloo-net = "0.2"
+futures = "0.3"
+js-sys = "0.3"
+anyhow = "1.0"
+reqwest = {version="0.11", features=["multipart", "stream", "json", "cookies"] }
 serde_json = "1.0"
-web-sys = { version="0.3.63", features=["DragEvent", "DataTransfer", 'FileList'] }
+web-sys = { version="0.3.63", features=["DragEvent", "Blob", "DataTransfer", 'FileList', "ReadableStream", "ReadableWritablePair", "WritableStream"] }
+wasm-streams = "0.3"
+wasm-bindgen = "0.2.87"
+wasm-bindgen-futures = "0.4.37"

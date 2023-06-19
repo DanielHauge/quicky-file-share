@@ -1,6 +1,5 @@
 use std::vec;
 
-use log::info;
 use web_sys::File;
 use yew::prelude::*;
 
