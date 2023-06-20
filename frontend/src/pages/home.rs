@@ -13,7 +13,7 @@ mod upload_task;
 
 use upload_input::UploadInput;
 use upload_tasks::Tasks;
-use upload_task::Task;
+use upload_task::UploadTask;
 
 pub enum Msg {
     UploadStart(Vec<File>),
@@ -49,7 +49,7 @@ impl Component for Home {
                 <UploadInput upload_files_cb={&upload_files_cb} />
                 <Tasks > 
                     { self.upload_tasks.iter().map(move |f|  {
-                        html!{ <Task file={f.clone()} done_cb={upload_complete.clone()} /> }
+                        html!{ <UploadTask file={f.clone()} done_cb={upload_complete.clone()} /> }
                     }
                     ).collect::<Html>() }
                 </Tasks>

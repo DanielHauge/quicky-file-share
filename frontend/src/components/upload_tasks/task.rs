@@ -1,12 +1,11 @@
 
-use log::log;
-use web_sys::{File, FileReader, Event, console};
-use yew::{html, Callback, Component, Html, Properties, suspense::use_future};
+use web_sys::{File, console};
+use yew::{html, Callback, Component, Html, Properties, suspense::{use_future}, function_component, HtmlResult, BaseComponent};
 
 #[path = "./upload.rs"]
 mod upload;
 
-pub struct Task{
+pub struct BaseUploadTask{
     file: File,
     // Progress: i32
 }
@@ -16,25 +15,37 @@ pub enum Msg {
     Done,
 }
 
+#[function_component(WithAsyncUpload)]
+pub fn upload_task<T>(props: &TaskProps) -> HtmlResult where T: Component<Properties = TaskProps>  {
+    let file = props.file.clone();
+    console::log_1(&"New task:".into());
+
+    let future = use_future(|| async move {
+        console::log_1(&"task start?:".into());
+        let fil = upload::upload_file(file).await;
+        console::log_1(&"task done?:".into());
+
+    });
+
+    let p = props.clone();
+
+    Ok(html! {<T ..p />})
+}
+
 #[derive(Properties, Clone, PartialEq)]
 pub struct TaskProps {
     pub file: File,
     pub done_cb: Callback<File>
 }
 
-impl Component for Task {
+impl Component for BaseUploadTask {
     type Message = Msg;
 
     type Properties = TaskProps;
 
     fn create(_ctx: &yew::Context<Self>) -> Self {
         
-        let file = _ctx.props().file.clone();
-
-        // upload::upload_file(file);
-        
-
-        Task {
+        BaseUploadTask {
             file: _ctx.props().file.clone(),
             // Progress: 0
         }
@@ -42,12 +53,6 @@ impl Component for Task {
 
     fn view(&self, ctx: &yew::Context<Self>) -> Html {
         let onclick = ctx.link().callback(|_| Msg::Done); 
-
-        // JavaScript Stream -> Rust Stream , done pretty unsafe and badly right here, look away please xD
-        
-        // upload::gg(self.file.clone());
-        
-        // let result = fil.unwrap();
 
 
         html! {
@@ -63,10 +68,8 @@ impl Component for Task {
                 ctx.props().done_cb.emit(self.file.clone());
                 true
             },
-            // Msg::Progress(p) => {
-            //     self.Progress = p;
-            //     true
-            // }
         }
     }
 }
+
+pub type UploadTask = WithAsyncUpload<BaseUploadTask>;
