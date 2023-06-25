@@ -20,9 +20,9 @@ pub fn upload_task<T>(props: &TaskProps) -> HtmlResult where T: Component<Proper
     let file = props.file.clone();
     console::log_1(&"New task:".into());
 
-    let future = use_future(|| async move {
+    let _future = use_future(|| async move {
         console::log_1(&"task start?:".into());
-        let fil = upload::upload_file(file).await;
+        let _fil = upload::upload_file(file).await;
         console::log_1(&"task done?:".into());
 
     });

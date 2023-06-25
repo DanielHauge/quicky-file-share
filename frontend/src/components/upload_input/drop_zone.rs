@@ -1,5 +1,11 @@
 use web_sys::{DragEvent, File, FileList};
+
 use yew::prelude::*;
+
+#[path = "../upload_tasks/upload.rs"]
+mod upload;
+
+use crate::home::upload_task;
 
 pub struct FileListIterator {
     files: FileList,
@@ -45,7 +51,10 @@ pub fn upload_field(props: &DropZoneProps) -> Html {
         move |e: DragEvent| {
             e.prevent_default();
             let iterator = FileListIterator::from(e);
-            cb.emit(iterator)
+            // iterator.for_each(|file| {
+            //     upload::upload_file(file);
+            // });
+            cb.emit(iterator);
         }
     };
 
