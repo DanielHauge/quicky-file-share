@@ -1,41 +1,32 @@
 
-use js_sys::{Boolean, Uint8Array};
+use js_sys::{Boolean, Uint8Array, Error};
+use reqwest::Request;
 use wasm_bindgen::JsValue;
-// use futures::StreamExt;
-// use wasm_bindgen::prelude::*;
-use web_sys::{File, console, ReadableStream};
-// use wasm_bindgen::{JsCast, UnwrapThrowExt};
+use serde::{Serialize, Deserialize};
+use web_sys::{File, console};
+
 use web_sys::ReadableStreamByobReader;
-use web_sys::FileReader;
 use wasm_bindgen_futures::JsFuture;
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ReadResult {
-    done: Boolean,
-    value: Uint8Array,
+    done: bool,
+    value: Vec<u8>,
 }
 
 
-pub async fn upload_file(file : File) -> String {
-    //Check the file list from the input
-    console::log_1(&"Hello using web-sys".into());
+pub async fn upload_file(file : File) -> Result<String, Error> {
 
+    console::log_1(&"Hello using web-sys".into());
     let stream = file.stream();
     let reader = ReadableStreamByobReader::new(&stream).ok().unwrap();
     
-    match JsFuture::from(reader.read_with_array_buffer_view(&js_sys::Uint8Array::new(&JsValue::from(4000)))).await {
-        Ok(result) => console::log_1(&result),
-        Err(error) => console::log_1(&error),
-    }
-
-    match JsFuture::from(reader.read_with_array_buffer_view(&js_sys::Uint8Array::new(&JsValue::from(4000)))).await {
-        Ok(result) => console::log_1(&result),
-        Err(error) => console::log_1(&error),
-    }
-
-
-
+    let gg = JsFuture::from(reader.read_with_array_buffer_view(&js_sys::Uint8Array::new(&JsValue::from(4000)))).await?;
+    let res: ReadResult = serde_wasm_bindgen::from_value(gg).unwrap();
+    console::log_1(&res.value.len().into());
+    console::log_1(&res.done.into());
 
     
-    return String::from("file uploaded.")
+    return Ok(String::from("file uploaded."))
 
 }
