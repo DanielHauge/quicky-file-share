@@ -20,12 +20,14 @@ pub async fn upload_file(file : File) -> Result<String, Error> {
     console::log_1(&"Hello using web-sys".into());
     let stream = file.stream();
     let reader = ReadableStreamByobReader::new(&stream).ok().unwrap();
+    let mut done = true;
+    while done {
+        let gg = JsFuture::from(reader.read_with_array_buffer_view(&js_sys::Uint8Array::new(&JsValue::from(4000)))).await?;
+        let res: ReadResult = serde_wasm_bindgen::from_value(gg).expect("failed to parse readable stream read result");
+        console::log_1(&res.value.len().into());
+        done = !res.done;
+    }
     
-    let gg = JsFuture::from(reader.read_with_array_buffer_view(&js_sys::Uint8Array::new(&JsValue::from(4000)))).await?;
-    let res: ReadResult = serde_wasm_bindgen::from_value(gg).unwrap();
-    console::log_1(&res.value.len().into());
-    console::log_1(&res.done.into());
-
     
     return Ok(String::from("file uploaded."))
 
