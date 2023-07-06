@@ -1,4 +1,4 @@
-use std::error::Error;
+use std::{error::Error, str::Bytes};
 
 use wasm_bindgen::JsValue;
 use web_sys::{ReadableStreamByobReader, File};
@@ -28,16 +28,14 @@ impl ByobStream {
     }
 }
 
+impl Stream for ByobStream {
+    type Item = Result<String, String>;
 
-
-impl TryStream for ByobStream {
-    type Ok = JsValue;
-    type Error = JsValue;
-
-    fn try_poll_next(self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> std::task::Poll<Option<Result<Self::Ok, Self::Error>>> {
+    fn poll_next(self: std::pin::Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> std::task::Poll<Option<Self::Item>> {
         todo!()
     }
 }
+
 
 
 unsafe impl Send for ByobStream {
